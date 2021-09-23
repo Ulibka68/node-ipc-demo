@@ -1,19 +1,18 @@
-### Запуск:
+### Run:
 
-В двух окнах терминала надо запустить сервер и клиент :
+This project is fully working. To run you need to run two terminal window:
 
 "srv": "ts-node src/server.ts",  
 "cli": "ts-node src/client.ts"
 
-### Описание 
-Для организации межпроцессного взаимодействия в Node решил использовать модуль node-ipc (1 млн скачиваний) и использовать unix socket
+### Problem
+If I'm using standart @types/node-ipc I can't use Client class, for example.
 
-Не получилось до конца правильно типизировать модуль node-ipc. В types написал declare module ...
+I'm write my own type definition file using declare module 'node-ipc'
 
-### Проблема
-Модуль node-ipc экспортирует singleton по умолчанию:  
-
-```const singleton=new IPCModule;
+External node-ipc package export singleton by default:  
+```
+const singleton=new IPCModule;
 
 export {
 singleton as default,
@@ -21,11 +20,14 @@ IPCModule
 }
 ```
 
-Задекларировать глобальную переменную в файле index.d.ts мне не удалось  
-Приходится каждый раз при импорте писать так:
+I can't declare singleton const in my type definition file.
+
+In every file using node-ipc I need to write:
+
 ```
 import ipcRoot, { IPC } from 'node-ipc';
 const ipc: IPC = ipcRoot as unknown as IPC;
 ```
-### Вопрос
-Как правильно описать глобальную переменную ?
+
+Please, help me describe singleton const in my d.ts file.
+I try declare var - but take error.
